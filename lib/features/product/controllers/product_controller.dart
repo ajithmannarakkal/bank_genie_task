@@ -4,10 +4,10 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import '../models/product_model.dart';
 import '../services/product_service.dart';
 
-class ProductController extends GetxController{
+class ProductController extends GetxController {
   final productService = ProductService();
-  RxList productList = <Product>[].obs;
-   RxBool isLoading = true.obs;
+  RxList<Product> productList = <Product>[].obs;
+  RxBool isLoading = true.obs;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -16,20 +16,16 @@ class ProductController extends GetxController{
   }
 
   Future<void> getProductList() async {
-    try{
-      isLoading.value=true;
+    try {
+      isLoading.value = true;
       final response = await productService.getProductList();
-      if(response.statusCode==200){
-        productList.value=productModelFromJson(response.body).products!;
+      if (response.products?.isNotEmpty ?? false) {
+        productList.value = response.products!;
       }
-    }
-    catch(e){
+    } catch (e) {
       print(e);
+    } finally {
+      isLoading.value = false;
     }
-    finally{
-      isLoading.value=false;
-    }
-
   }
-
 }
