@@ -16,11 +16,13 @@ class ApiService {
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
-      body: body,
+      body: jsonEncode(body),
     );
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
+      print(body);
+      print(url);
       throw Exception("Something went wrong");
     }
   }
